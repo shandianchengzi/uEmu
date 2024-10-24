@@ -35,6 +35,8 @@ mem = {
 }
 
 init = {
+	 entry = {{ entry }}, -- equal to pc of Reset_Handler+1
+	 msp_init = {{ msp }},
    vtor = {{ vtor }},
 }
 

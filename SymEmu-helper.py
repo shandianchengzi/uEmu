@@ -35,6 +35,12 @@ def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefil
     config['rom'] = parser.get("MEM_Config","rom").split( )
     config['ram'] = parser.get("MEM_Config","ram").split( )
     config['vtor'] = int(parser.get("MEM_Config","vtor"), 16)
+    try:
+        config['entry'] = int(parser.get("MEM_Config","entry"), 16)
+        config['msp'] = int(parser.get("MEM_Config","msp"), 16)
+    except:
+        config['entry'] = None
+        config['msp'] = None
 
     # IRQ
     config['irq_tb_break'] = parser.getint("IRQ_Config","irq_tb_break")
