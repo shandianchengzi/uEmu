@@ -55,6 +55,10 @@ def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefil
     config['bb_terminate'] = parser.getint("INV_Config","bb_terminate")
     config['kill_points'] = parser.get("INV_Config","kill_points").split()
     config['alive_points'] = parser.get("INV_Config","alive_points").split()
+    try:
+        config['skip_points'] = parser.get("INV_Config","skip_points").split()
+    except:
+        config['skip_points'] = []
 
     if peripheralmodel == "uEmu":
         config['cache_file_name'] = cachefilename if datasymmode else ""

@@ -102,6 +102,10 @@ pluginsConfig.InvalidStatesDetection = {
 	alivePoints = {
         {% for a in alive_points %}
         {{ a }},{% endfor %}
+	},
+	skipPoints = {
+		{% for s in skip_points %}
+        {{ s }},{% endfor %}
 	}
 }
 add_plugin("uEmuExternalInterrupt")
