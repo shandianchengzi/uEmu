@@ -1,0 +1,12 @@
+[submodule "decree"]
+	path = decree
+	url = https://github.com/MCUSec/decree
+[submodule "s2e"]
+	path = s2e
+	url = https://github.com/shandianchengzi/s2e
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/MCUSec/scripts
+[submodule "qemu"]
+	path = qemu
+	url = https://github.com/IoTS-P/qemu

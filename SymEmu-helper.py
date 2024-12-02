@@ -41,6 +41,10 @@ def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefil
     except:
         config['entry'] = None
         config['msp'] = None
+    try:
+        config['persistent_data'] = parser.get("MEM_Config","persistent_data").split( )
+    except:
+        config['persistent_data'] = []
 
     # IRQ
     config['irq_tb_break'] = parser.getint("IRQ_Config","irq_tb_break")
@@ -67,6 +71,17 @@ def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefil
         config['t2_caller_level'] = parser.getint("TC_Config","t2_caller_level")
         config['t2_max_context'] = parser.getint("TC_Config","t2_max_context")
         config['t3_max_symbolic_count'] = parser.getint("TC_Config","t3_max_symbolic_count")
+        try:
+            # relative path to config file
+            cfg_dir = os.path.dirname(cfg_f)
+            syms_file = parser.get("TC_Config","syms_file")
+            config['syms_file'] = os.path.abspath(os.path.join(cfg_dir, syms_file))
+        except:
+            config['syms_file'] = "none"
+        try:
+            config['fuzz_peripherals'] = parser.get("TC_Config","fuzz_peripherals").split()
+        except:
+            config['fuzz_peripherals'] = []
     else: # NLP Peripheral Model
         config['nlp_file_name'] = nlpfilename   
 

@@ -32,11 +32,14 @@ mem = {
 	ram = {
 		{% for ra in ram %} {{ '{' }}{{ ra }}{{ '}' }}, {% endfor %}
 	},
+	persistent_data = {
+		{% for pd in persistent_data %} {{ '{' }}{{ pd }}{{ '}' }}, {% endfor %}
+	},
 }
 
 init = {
-	 entry = {{ entry }}, -- equal to pc of Reset_Handler+1
-	 msp_init = {{ msp }},
+   entry = {{ entry }}, -- equal to pc of Reset_Handler+1
+   msp_init = {{ msp }},
    vtor = {{ vtor }},
 }
 
@@ -66,6 +69,7 @@ add_plugin("ARMFunctionMonitor")
 pluginsConfig.ARMFunctionMonitor = {
 	functionParameterNum = {{ t2_function_parameter_num }},
 	callerLevel = {{ t2_caller_level }},
+	symsFile = "{{ syms_file }}",
 }
 
 add_plugin("SymbolicHardware")
@@ -85,7 +89,11 @@ pluginsConfig.PeripheralModelLearning = {
 	enableExtendedInterruptMode = "true",
 	cacheFileName = "{{ cache_file_name }}",
 	firmwareName = "{{ firmware_name }}",
-	ruleOutputpath = "{{ rule_outputpath }}"
+	ruleOutputpath = "{{ rule_outputpath }}",
+	fuzzPeripherals = {
+		{% for p in fuzz_peripherals %}
+		{{ p }},{% endfor %}
+	}
 }
 
 add_plugin("InvalidStatesDetection")
