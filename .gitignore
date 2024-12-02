@@ -1,1 +1,7 @@
 build
+
+SymEmu-config.lua
+gdb.ini
+launch-SymEmu.sh
+s2e-last
+s2e-out-*

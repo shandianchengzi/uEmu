@@ -10,6 +10,15 @@ import struct
 import configparser
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+# 在bin文件前增加一段空数据，0x0000~0x4000
+def add_empty(bin_file, out_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+
+    with open(out_file, 'wb') as f:
+        f.write(b'\x00' * (0x4000))
+        f.write(data)
+
 DEFAULT_TEMPLATES_DIR = os.getcwd()
 def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefilename, firmwarename, debug, testcasename, ruleoutputpath):
     if not os.path.isfile(cfg_f):
@@ -45,6 +54,16 @@ def read_config(cfg_f, cpu, datasymmode, peripheralmodel, cachefilename, rulefil
         config['persistent_data'] = parser.get("MEM_Config","persistent_data").split( )
     except:
         config['persistent_data'] = []
+    try:
+        # 对于load_offset，只能在文件的最开头填空字符，在S2E里不好控制，所以这里在外面处理一下
+        load_offset = int(parser.get("MEM_Config","load_offset"), 16)
+        print("load_offset: 0x%x, add empty at the beginning of firmware..." % load_offset)
+        add_empty(firmwarename, firmwarename + '.offset')
+        print("Add empty data success! New firmware name is %s" % (firmwarename + '.offset'))
+        config['firmware_name'] = firmwarename + '.offset'
+    except:
+        pass
+
 
     # IRQ
     config['irq_tb_break'] = parser.getint("IRQ_Config","irq_tb_break")
@@ -193,7 +212,7 @@ def main(argv):
         'creation_time': str(datetime.datetime.now()),
         'qemu_arch':"arm",
         'memory':"2M",
-        'firmware': args.firmware,
+        'firmware': config['firmware_name'],
         'root_dir': os.environ['SymEmuDIR'],
     }
     render_template(launch, "launch-SymEmu-template.sh", "launch-SymEmu.sh", executable=True)
